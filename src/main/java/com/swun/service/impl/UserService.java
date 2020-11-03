@@ -27,6 +27,7 @@ public class UserService implements IUserService {
     @Override
     public int login(User user) {
         List<User> userList=userDao.findAll();
+        System.out.println(userList);
         for(User e:userList)
             if((e.getUsername().equals(user.getUsername()))&&(e.getPassword().equals(user.getPassword())))
                 return 1;
