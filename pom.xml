@@ -63,6 +63,11 @@
             <artifactId>org.eclipse.jgit</artifactId>
             <version>3.7.0.201502260915-r</version>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.hudson</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210-hudson-1</version>
+        </dependency>
     </dependencies>
 
     <build>

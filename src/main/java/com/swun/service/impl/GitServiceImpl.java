@@ -4,7 +4,9 @@ package com.swun.service.impl;
 import com.jcraft.jsch.Session;
 import com.swun.service.IGitService;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.transport.JschConfigSessionFactory;
 import org.eclipse.jgit.transport.OpenSshConfig;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -12,18 +14,19 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.List;
 
 @Service("IGitService")
 public class GitServiceImpl implements IGitService {
     //本地git路径
-    public String LOCALPATH = "D:/user/yang";
+    public String LOCALPATH;
     //.git文件路径
-    public String LOCALGITPATH = LOCALPATH + "/.git";
+    public String LOCALGITPATH;
     public String USER = "git";
     public String PASSWORD = "bb112233";
     //远程主机
-    public String HOST = "192.168.236.11";
-    public String RemoteRepoUri = "git@192.168.236.11:/home/gitrepo/sample.git";
+    public String HOST = "git@192.168.236.11";
+    public String RemoteRepoUri = "git@192.168.236.11:/home/gitrepo/";
     //建立本地仓库
     @Override
     public void cloneToLocal(String username,String repository) {
@@ -46,7 +49,7 @@ public class GitServiceImpl implements IGitService {
             SshSessionFactory.setInstance(jschConfigSessionFactory);
             this.LOCALPATH = "D:/user/"+username+"/"+repository;
             this.LOCALGITPATH = LOCALPATH + "/.git";
-
+            this.RemoteRepoUri += username+"/"+repository+".git";
             Git.cloneRepository()
                     .setURI(RemoteRepoUri)
                     .setBranch("master")
@@ -60,7 +63,8 @@ public class GitServiceImpl implements IGitService {
 
     @Override
     public void pullBranchToLocal(String repository,String branch,String username) {
-
+        this.LOCALPATH = "D:/user/"+username+"/"+repository;
+        this.LOCALGITPATH = LOCALPATH + "/.git";
         try {
             Git git;
             git = new Git(new FileRepository(LOCALGITPATH));
@@ -75,12 +79,30 @@ public class GitServiceImpl implements IGitService {
     }
 
     @Override
-    public void checkoutBranch(String branch) {
+    public void checkoutBranch(String branch,String username,String repository) {
         try {
-
+            this.LOCALPATH = "D:/user/"+username+"/"+repository;
+            this.LOCALGITPATH = LOCALPATH + "/.git";
+            Git git = new Git(new FileRepository(LOCALGITPATH));
+            if(branchNameExist(git,branch)){
+                //如果分支存在，切换分支
+                git.checkout().setCreateBranch(false).setName(branch);
+            }else{
+                //分支不存在，创建分支
+                git.checkout().setCreateBranch(true).setName(branch);
+            }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
+    }
+    public boolean branchNameExist(Git git, String branchName) throws GitAPIException {
+        List<Ref> refs = git.branchList().call();
+        for (Ref ref : refs) {
+            if (ref.getName().contains(branchName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
