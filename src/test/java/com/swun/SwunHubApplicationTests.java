@@ -2,6 +2,7 @@ package com.swun;
 
 import com.swun.dao.IUserDao;
 import com.swun.domain.User;
+import com.swun.service.IShellService;
 import com.swun.service.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ class SwunHubApplicationTests {
     private UserService userService;
     @Autowired
     private IUserDao dao;
-
+    @Autowired
+    private IShellService shellService;
 
 
     @Test//service层
@@ -39,5 +41,6 @@ class SwunHubApplicationTests {
         dao.regist(user);
 
     }
+
 
 }
