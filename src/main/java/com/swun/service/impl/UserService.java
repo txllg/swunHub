@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("userService")
+@Service
 public class UserService implements IUserService {
 
     @Autowired
@@ -19,20 +19,20 @@ public class UserService implements IUserService {
         List<User> userList=userDao.findAll();
         for(User e:userList)
             if(e.getUsername().equals(user.getUsername()))
-                return 0;
-        userDao.regist(user);
+                return 0;//用户名已经存在，注册失败
+
+        userDao.regist(user);//注册成功
         return 1;
     }
 
     @Override
     public int login(User user) {
         List<User> userList=userDao.findAll();
-        System.out.println(userList);
         for(User e:userList)
             if((e.getUsername().equals(user.getUsername()))&&(e.getPassword().equals(user.getPassword())))
-                return 1;
+                return 1;//用户名和密码正确，登录成功
 
-        return 0;
+        return 0;//登录失败
     }
 
 

@@ -2,12 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>index</title>
 </head>
 <body>
 
-<h2>index page</h2>
-<a href="login">登录</a><br>
-<a href="testInterceptor">page1</a><br>
+<h2>添加仓库</h2>
+<form action="addRepository">
+    用户名：<input type="text" name="username"><br>
+    仓库名：<input type="text" name="repositoryName">
+</form><br>
+
+<h2>删除仓库</h2>
+<form action="/deleteRepository">
+    用户名：<input type="text" name="username"><br>
+    仓库名：<input type="text" name="repositoryName">
+</form><br>
+
+<h2>查询仓库</h2>
+<form action="/findRepository">
+    用户名：<input type="text" name="username"><br>
+</form><br>
+
 </body>
 </html>
